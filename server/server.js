@@ -37,15 +37,25 @@ io.on('connection', (socket) => {
 
     //messages
     //newMessage - emitted on server
-    socket.emit('newMessage',{
-        from: 'joe@example.com',
-        to:'pankaja@example.com;andy@example.com',
-        text:'NodeJS users meeting Oct. 20, 2018 at Middlesex Country College',
-        createdAt: 887129
-    });
+    // socket.emit('newMessage',{
+    //     from: 'joe@example.com',
+    //     to:'pankaja@example.com;andy@example.com',
+    //     text:'NodeJS users meeting Oct. 20, 2018 at Middlesex Country College',
+    //     createdAt: 887129
+    // });
+    //socket.emit emits to a single connection
+    //io.emit emits to every single connection to the server
+    //hence we comment out the socket.emit event above
+
     //createMessage listener - on the server
     socket.on('createMessage', (message) => {
         console.log('createMessage', message);
+        
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
     });
 
     //Disconnect built-in event
@@ -53,13 +63,6 @@ io.on('connection', (socket) => {
         console.log('User disconnected - server');
     });
 });
-
-//app.listen behind the scene is actually calling a
-//createServer
-// app.listen(port, () => {
-//     console.log(`Server is up on port ${port}`);
-// });
-
 
 //instead we do
 server.listen(port, () => {

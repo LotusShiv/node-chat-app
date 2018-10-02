@@ -11,11 +11,13 @@ socket.on('connect', function() {
     //     text: 'Hey Jen this is Andrew.'
     // });
 
+    //We commented out socket.emit because we used the
+    //io.emit on server.js within the createMessage
     //createMessage - emitted on client
-    socket.emit('createMessage', {
-        from: 'joe@example.com',
-        text:'NodeJS users meeting Oct. 20, 2018 at Middlesex Country College',
-    });
+    // socket.emit('createMessage', {
+    //     from: 'joe@example.com',
+    //     text:'NodeJS users meeting Oct. 20, 2018 at Middlesex Country College',
+    // });
 });
 
 //listeners are always separately by themselves as
