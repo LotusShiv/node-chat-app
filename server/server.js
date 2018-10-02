@@ -17,24 +17,20 @@ app.use(express.static(publicPath));
 //connection
 io.on('connection', (socket) => {
     console.log('Server - New user connected');
+    
     //everytime a user connects to the app this message
     //will get printed
+    socket.broadcast.emit('newMessage', 
+    {
+        text: 'New user joined',
+        from: 'Admin',
+        createdAt: new Date().getTime()
+    });
 
     //NOTE: all the events have to written within 
     //      the io.on('connection', ...) block
     
     //Custom events
-    // //New email 
-    // socket.emit('newEmail', {
-    //     from: 'mike@example.com',
-    //     text: 'Hey, what is going on?',
-    //     createdAt: 12409
-    // });
-    // //listener for createEmail
-    // socket.on('createEmail', (newEmail) => {
-    //     console.log('createEmail', newEmail);
-    // });
-
     //messages
     //newMessage - emitted on server
     // socket.emit('newMessage',{
@@ -47,6 +43,13 @@ io.on('connection', (socket) => {
     //io.emit emits to every single connection to the server
     //hence we comment out the socket.emit event above
 
+    //from Admin to the new user joined
+    socket.emit('newMessage', {
+        text:'Welcome to the chat app',
+        from: 'Admin',
+        createdAt: new Date().getTime()
+    });
+
     //createMessage listener - on the server
     socket.on('createMessage', (message) => {
         console.log('createMessage', message);
@@ -56,6 +59,13 @@ io.on('connection', (socket) => {
             text: message.text,
             createdAt: new Date().getTime()
         });
+        // //This sends to everybody but this socket
+        // //i.e. the current user connection
+        // socket.broadcast.emit('newMessage', {
+        //     from: message.from,
+        //     text: message.text,
+        //     createdAt: new Date().getTime()
+        // });
     });
 
     //Disconnect built-in event

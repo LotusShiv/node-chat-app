@@ -5,12 +5,6 @@ var socket = io();
 socket.on('connect', function() {
     console.log('Connected to server - client');
     //only way the listener events are going to emit is
-    //by calling socket.emit for those listeners
-    // socket.emit('createEmail', {
-    //     to: 'jen@example.com',
-    //     text: 'Hey Jen this is Andrew.'
-    // });
-
     //We commented out socket.emit because we used the
     //io.emit on server.js within the createMessage
     //createMessage - emitted on client
@@ -26,12 +20,8 @@ socket.on('disconnect', function() {
     console.log('Disconnected from the server');
 });
 
-// //listen to custom event (from server emitted in server.js)
-// socket.on('newEmail', function(email){
-//     console.log('New Email', email);
-// });
-
 //event listener on client
-socket.on('newMessage', function(message){
-    console.log('New message from server to client', message);
+socket.on('newMessage', function(user){
+    console.log('newMessage');
+    console.log(user);
 });
