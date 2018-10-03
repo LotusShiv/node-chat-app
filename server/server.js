@@ -29,11 +29,20 @@ io.on('connection', (socket) => {
       generateMessage('Admin', 'Welcome to the chat app'));
     
     //createMessage listener - on the server
-    socket.on('createMessage', (message) => {
+    // to send event acknowlegement to server
+    // now in order to send acknowledgement back to client
+    // we need a callback function here on the listener as well
+    socket.on('createMessage', (message, callback) => {
         console.log('createMessage', message);
         
         io.emit('newMessage', 
             generateMessage(message.from, message.text));
+        
+        //We can pass as an object callback({..})
+        // that way we can send any number of properties to be
+        // in the object, 
+        //but for now we will just use a string
+        callback('This is from the server.');
     });
 
     //Disconnect built-in event

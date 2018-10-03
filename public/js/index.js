@@ -21,7 +21,34 @@ socket.on('disconnect', function() {
 });
 
 //event listener on client
-socket.on('newMessage', function(user){
-    console.log('newMessage');
-    console.log(user);
+socket.on('newMessage', function(message){
+    //console.log('newMessage', message);
+    var li = jQuery('<li></li>');
+    li.text(`${message.from}: ${message.text}`);
+    jQuery('#messages').append(li);
 });
+
+//event emitter on client 
+// - to send acknowledgement to server
+// - to receive acknowledgement from server
+// socket.emit('createMessage', {
+//     from: 'Frank',
+//     text: 'Hi'
+//   }, 
+//   //add callback function to receive data if any
+//   function(data){
+//      console.log('Got it', data);
+//  });
+
+ //Dom manipulation events
+ jQuery('#message-form').on('submit',
+  function(e) {
+    //we need to use this event to override the default behavior
+    e.preventDefault();
+    socket.emit('createMessage', {
+        from: 'User',
+        text: jQuery('[name=message]').val()
+    }, function(){
+
+    });
+ });
