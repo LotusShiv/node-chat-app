@@ -1,7 +1,7 @@
 const expect = require('expect');
 
-var {generateMessage} = require('./message');
-
+var {generateMessage, generateLocationMessage} = require('./message');
+//we need just plain synchronous tests
 describe('generateMessage', () => {
     var from = '', text = '';
     var res = null;
@@ -17,5 +17,23 @@ describe('generateMessage', () => {
             text
         })
         expect(typeof res.createdAt).toBe('number');
+    });
+});
+
+describe('generateLocationMessage', () => {
+    it('should generate correct location message object', () => {
+        from = 'Deb';
+        var lat = 39.9367117;
+        var lng = -75.1708349;
+        var url = `https://www.google.com/maps?q=${lat},${lng}`
+        res = generateLocationMessage(from, lat, lng);
+        
+        expect(typeof res.createdAt).toBe('number');
+        var resObj = {from: res.from, url: res.url};
+        expect(resObj).toMatchObject({
+            from,
+            url
+        });
+
     });
 });

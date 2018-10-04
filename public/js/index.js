@@ -4,14 +4,6 @@ var socket = io();
 //to listen to the server and pass data back and forth
 socket.on('connect', function() {
     console.log('Connected to server - client');
-    //only way the listener events are going to emit is
-    //We commented out socket.emit because we used the
-    //io.emit on server.js within the createMessage
-    //createMessage - emitted on client
-    // socket.emit('createMessage', {
-    //     from: 'joe@example.com',
-    //     text:'NodeJS users meeting Oct. 20, 2018 at Middlesex Country College',
-    // });
 });
 
 //listeners are always separately by themselves as
@@ -22,23 +14,20 @@ socket.on('disconnect', function() {
 
 //event listener on client
 socket.on('newMessage', function(message){
-    //console.log('newMessage', message);
     var li = jQuery('<li></li>');
     li.text(`${message.from}: ${message.text}`);
     jQuery('#messages').append(li);
 });
 
-//event emitter on client 
-// - to send acknowledgement to server
-// - to receive acknowledgement from server
-// socket.emit('createMessage', {
-//     from: 'Frank',
-//     text: 'Hi'
-//   }, 
-//   //add callback function to receive data if any
-//   function(data){
-//      console.log('Got it', data);
-//  });
+socket.on('newLocationMessage', function(message){
+    var li = jQuery('<li></li>');
+    li.text(`${message.from}: `);
+    
+    var anchor = jQuery('<a target="_blank">My current location</a>');
+    anchor.attr('href', message.url);
+    li.append(anchor);
+    jQuery('#messages').append(li);
+});
 
  //Dom manipulation events
  jQuery('#message-form').on('submit',
@@ -49,6 +38,24 @@ socket.on('newMessage', function(message){
         from: 'User',
         text: jQuery('[name=message]').val()
     }, function(){
-
+        //clear input after emiting
+        jQuery('[name=message]').val('');
     });
+ });
+
+ var locationButton = jQuery('#send-location');
+ locationButton.on('click', function(){
+    if (!navigator.geolocation){
+        alert('Geolocation not supported by your browser.');
+    }
+    else{
+        navigator.geolocation.getCurrentPosition(function(position){
+            socket.emit('createLocationMessage', {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            });
+        }, function(){
+            alert('Unable to fetch location.');
+        });
+    }
  });
