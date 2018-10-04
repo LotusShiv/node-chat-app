@@ -17,6 +17,7 @@ describe('generateMessage', () => {
             text
         })
         expect(typeof res.createdAt).toBe('number');
+        //expect(typeof res.createdAt).toBe('string');
     });
 });
 
@@ -28,6 +29,7 @@ describe('generateLocationMessage', () => {
         var url = `https://www.google.com/maps?q=${lat},${lng}`
         res = generateLocationMessage(from, lat, lng);
         
+        //expect(typeof res.createdAt).toBe('string');
         expect(typeof res.createdAt).toBe('number');
         var resObj = {from: res.from, url: res.url};
         expect(resObj).toMatchObject({
