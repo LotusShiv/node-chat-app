@@ -40,9 +40,8 @@ io.on('connection', (socket) => {
         
         //We can pass as an object callback({..})
         // that way we can send any number of properties to be
-        // in the object, 
-        //but for now we will just use a string
-        callback('This is from the server.');
+        // in the object, or just a string or nothing at all..
+        callback();
     });
 
     socket.on('createLocationMessage', (coords) => {

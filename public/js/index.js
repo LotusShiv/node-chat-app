@@ -34,28 +34,36 @@ socket.on('newLocationMessage', function(message){
   function(e) {
     //we need to use this event to override the default behavior
     e.preventDefault();
+    var messageTextbox = jQuery('[name=message]');
+
     socket.emit('createMessage', {
         from: 'User',
-        text: jQuery('[name=message]').val()
+        text: messageTextbox.val()
     }, function(){
         //clear input after emiting
-        jQuery('[name=message]').val('');
+        messageTextbox.val('');
     });
  });
 
  var locationButton = jQuery('#send-location');
  locationButton.on('click', function(){
     if (!navigator.geolocation){
-        alert('Geolocation not supported by your browser.');
+        return alert('Geolocation not supported by your browser.');
     }
-    else{
-        navigator.geolocation.getCurrentPosition(function(position){
-            socket.emit('createLocationMessage', {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            });
-        }, function(){
-            alert('Unable to fetch location.');
+    locationButton.attr('disabled', 'disabled')
+    .text('Sending location');
+    
+    navigator.geolocation.getCurrentPosition(function(position){
+        locationButton.removeAttr('disabled')
+        .text('Send location');
+
+        socket.emit('createLocationMessage', {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
         });
-    }
+    }, function(){
+        locationButton.removeAttr('disabled')
+        .text('Send location');
+        alert('Unable to fetch location.');
+    });
  });
