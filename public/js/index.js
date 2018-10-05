@@ -1,5 +1,26 @@
 //call from client to open up the websocket connection
 var socket = io(); 
+
+function scrollToBottom(){
+    var messages = jQuery('#messages');
+    var newMessage = messages.children('li');
+
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev()
+                            .innerHeight();
+    if (clientHeight + scrollTop 
+        + newMessageHeight + lastMessageHeight >= scrollHeight){
+         messages.scrollTop(scrollHeight);
+    }
+}
+
+function getFormattedTimestamp(time, format){
+    return moment(time).format(format);
+}
+
 //critical to communicating
 //to listen to the server and pass data back and forth
 socket.on('connect', function() {
@@ -20,11 +41,12 @@ socket.on('newMessage', function(message){
     var view = {
         from: message.from,
         text: message.text,
-        createdAt: moment(message.createdAt).format('h:mm a')
+        createdAt: getFormattedTimestamp(message.createdAt, 'h:mm a') //moment(message.createdAt).format('h:mm a')
     };
     var html = Mustache.render(template, view);
 
     jQuery('#messages').append(html);
+    scrollToBottom();
 });
 
 socket.on('newLocationMessage', function(message){
@@ -33,11 +55,12 @@ socket.on('newLocationMessage', function(message){
     var view = {
         from: message.from,
         url: message.url,
-        createdAt: moment(message.createdAt).format('h:mm a')
+        createdAt:  getFormattedTimestamp(message.createdAt, 'h:mm a')  //moment(message.createdAt).format('h:mm a')
     };
     var html = Mustache.render(template, view);
 
-    jQuery('#messages').append(html)
+    jQuery('#messages').append(html);
+    scrollToBottom();
 });
 
  //Dom manipulation events
