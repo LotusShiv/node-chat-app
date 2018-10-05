@@ -15,5 +15,6 @@ var date = moment();
 date = moment(1234);
 console.log(date.format('h:mm a'));
 
+//var someTimestamp = moment().format('h:mm a');
 var someTimestamp = moment().valueOf();
 console.log('Timestamp in milliseconds since the unix epic',someTimestamp);

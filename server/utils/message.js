@@ -18,7 +18,12 @@ var generateLocationMessage = (from, latitude, longitude) => {
     };
 };
 
+var getFormattedTimestamp = (time, format) =>{
+    return moment(message.createdAt).format(format);
+};
+
 module.exports = {
     generateMessage,
-    generateLocationMessage
+    generateLocationMessage,
+    getFormattedTimestamp
 };

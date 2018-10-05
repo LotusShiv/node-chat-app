@@ -14,21 +14,30 @@ socket.on('disconnect', function() {
 
 //event listener on client
 socket.on('newMessage', function(message){
-    var formattedTime = moment(message.createdAt).format('h:mm a');
-    var li = jQuery('<li></li>');
-    li.text(`${message.from} ${formattedTime}: ${message.text}`);
-    jQuery('#messages').append(li);
+    //Instead we are going to use the mustache template
+    //techniques - mustache rendering techniques
+    var template = jQuery('#message-template').html();
+    var view = {
+        from: message.from,
+        text: message.text,
+        createdAt: moment(message.createdAt).format('h:mm a')
+    };
+    var html = Mustache.render(template, view);
+
+    jQuery('#messages').append(html);
 });
 
 socket.on('newLocationMessage', function(message){
-    var formattedTime = moment(message.createdAt).format('h:mm a');
-    var li = jQuery('<li></li>');
-    li.text(`${message.from} ${formattedTime}: `);
-    
-    var anchor = jQuery('<a target="_blank">My current location</a>');
-    anchor.attr('href', message.url);
-    li.append(anchor);
-    jQuery('#messages').append(li);
+    //var formattedTime = moment(message.createdAt).format('h:mm a');
+    var template = jQuery('#location-message-template').html();
+    var view = {
+        from: message.from,
+        url: message.url,
+        createdAt: moment(message.createdAt).format('h:mm a')
+    };
+    var html = Mustache.render(template, view);
+
+    jQuery('#messages').append(html)
 });
 
  //Dom manipulation events
