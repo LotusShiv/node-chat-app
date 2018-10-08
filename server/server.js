@@ -59,11 +59,12 @@ io.on('connection', (socket) => {
     // now in order to send acknowledgement back to client
     // we need a callback function here on the listener as well
     socket.on('createMessage', (message, callback) => {
-        console.log('createMessage', message);
-        
-        io.emit('newMessage', 
-            generateMessage(message.from, message.text));
-        
+        var user = users.getUser(socket.id);
+        if (user && isRealString(message.text)){
+            //io.emit('newMessage', generateMessage(user.from, message.text));
+            io.to(user.room).emit('newMessage', 
+                generateMessage(user.name, message.text));
+        }    
         //We can pass as an object callback({..})
         // that way we can send any number of properties to be
         // in the object, or just a string or nothing at all..
@@ -71,11 +72,14 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createLocationMessage', (coords) => {
-        //io.emit('newMessage', 
-        io.emit('newLocationMessage',
-        generateLocationMessage('Admin', 
-        coords.latitude,coords.longitude));
+        var user = users.getUser(socket.id);
+        if (user) {
+            io.to(user.room).emit('newLocationMessage',
+              generateLocationMessage(user.name, 
+              coords.latitude,coords.longitude));
+        }
     });
+
     //Disconnect built-in event
     socket.on('disconnect', () =>{
         var user = users.removeUser(socket.id);
