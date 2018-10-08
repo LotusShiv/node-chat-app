@@ -24,13 +24,35 @@ function getFormattedTimestamp(time, format){
 //critical to communicating
 //to listen to the server and pass data back and forth
 socket.on('connect', function() {
-    console.log('Connected to server - client');
+    //console.log('Connected to server');
+    var params = jQuery.deparam(window.location.search);
+    //socket io has built-in support for 
+    //the idea of rooms, and we define a 'join' custom event
+    socket.emit('join', params, function(err){
+        if(err){
+            alert(err);
+            //send the user back to the root page
+            window.location.href = '/';
+        }
+        else{
+            console.log('No error');
+        }
+    });
 });
 
 //listeners are always separately by themselves as
 //below
 socket.on('disconnect', function() {
     console.log('Disconnected from the server');
+});
+
+socket.on('updateUserList', function(users) {
+    //console.log(users);
+    var ol = jQuery('<ol></ol>');
+    users.forEach(function(user){
+        ol.append(jQuery('<li></li>').text(user));
+    });
+    jQuery('#userList').html(ol); //we want to up an not append
 });
 
 //event listener on client
