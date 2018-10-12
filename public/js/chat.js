@@ -24,15 +24,17 @@ function getFormattedTimestamp(time, format){
 //critical to communicating
 //to listen to the server and pass data back and forth
 socket.on('connect', function() {
-    //console.log('Connected to server');
+    console.log('window search', window.location.search);
     var params = jQuery.deparam(window.location.search);
     //socket io has built-in support for 
     //the idea of rooms, and we define a 'join' custom event
     socket.emit('join', params, function(err){
         if(err){
-            alert(err);
+            console.log('Err join', err);
             //send the user back to the root page
+            //window.location.search = '?err=' + err;
             window.location.href = '/';
+            //window.location.search = '?err=' + err;
         }
         else{
             console.log('No error');
@@ -47,7 +49,6 @@ socket.on('disconnect', function() {
 });
 
 socket.on('updateUserList', function(users) {
-    //console.log(users);
     var ol = jQuery('<ol></ol>');
     users.forEach(function(user){
         ol.append(jQuery('<li></li>').text(user));
@@ -55,14 +56,24 @@ socket.on('updateUserList', function(users) {
     jQuery('#userList').html(ol); //we want to up an not append
 });
 
+var getRandomColor = function(){
+    var colors = [ 'red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange' ];
+    // ... in random order
+    colors.sort(function(a,b) { return Math.random() > 0.5; } );
+    return colors.shift();
+}
 //event listener on client
 socket.on('newMessage', function(message){
     //Instead we are going to use the mustache template
     //techniques - mustache rendering techniques
     var template = jQuery('#message-template').html();
+    const color = getRandomColor();
+    var messageColor = `color:${color}`;
+    console.log('color', messageColor);
     var view = {
         from: message.from,
         text: message.text,
+        messageColor: messageColor,
         createdAt: getFormattedTimestamp(message.createdAt, 'h:mm a') //moment(message.createdAt).format('h:mm a')
     };
     var html = Mustache.render(template, view);
@@ -74,9 +85,12 @@ socket.on('newMessage', function(message){
 socket.on('newLocationMessage', function(message){
     //var formattedTime = moment(message.createdAt).format('h:mm a');
     var template = jQuery('#location-message-template').html();
+    const color = getRandomColor();
+    var messageColor = `color:${color}`;
     var view = {
         from: message.from,
         url: message.url,
+        messageColor: messageColor,
         createdAt:  getFormattedTimestamp(message.createdAt, 'h:mm a')  //moment(message.createdAt).format('h:mm a')
     };
     var html = Mustache.render(template, view);

@@ -8,23 +8,38 @@
         <link rel="stylesheet" href="/css/styles.css">
     </head>
     <body class="centered-form">
-        <form action="/chat.html">
+        <!-- <form action="/chat.html" id="index-join"> -->
+        <form id="index-join"> 
             <div class="centered-form__form">
-                    <div class="form-field">
-                        <h3>Join a chat</h3>
-                    </div>
-                    <div class="form-field">
-                        <label>Display name</label>
-                        <input type="text" name="name" autofocus />
-                    </div>
-                    <div class="form-field">
-                        <label>Room name</label>
-                        <input type="text" name="room" autofocus />
-                    </div>
-                    <div class="form-field">
-                        <button>Join</button>
-                    </div>
+                <div class="form-field">
+                    <h3>Join a chat</h3>
                 </div>
+                <div class="form-field">
+                    <label>Display name</label>
+                    <input type="text" id="name" name="name" autofocus />
+                    <p id="nameError" class="chat__error"></p>
+                    <script id="errName" type="text/template">
+                        <span id="errMessage" class="chat__error">{{error}}</span>
+                    </script>
+                </div>
+                <div class="form-field">
+                    <label>Room name</label>
+                    <input type="text" id="room" name="room" autofocus />
+                </div>
+                <div class="form-field">
+                    <label>Available Chat rooms</label>
+                    <select id="ddlRooms" ></select>
+                </div>
+                <div class="form-field">
+                    <button >Join</button>
+                </div>
+            </div>
         </form>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/libs/jquery-3.3.1.min.js"></script>
+        <script src="/js/libs/mustache.js"></script>
+        <script src="/js/libs/moment.js"></script>
+        <script src="/js/libs/deparam.js"></script>
+        <script src="/js/index.js"></script>
     </body>
 </html>

@@ -37,8 +37,12 @@ class Users{
         // var users = this.users.filter((user) => {
         //     return user.room === room;
         // });
-        var users = this.users.filter((user) => user.room === room);
-        var namesArray = users.map(user => user.name);
+        //var users = this.users.filter((user) => user.room.toLowerCase() === room.toLowerCase());
+        var namesArray = [];
+        if (room){
+            var users = this.users.filter((user) => (user.room).toLowerCase() === room.toLowerCase());
+            var namesArray = users.map(user => user.name);
+        }
         return namesArray;
     }
 }

@@ -120,6 +120,11 @@ button:disabled {
   width: 100%;
 }
 
+.chat__error{
+  color: red;
+  font-size-adjust: inherit;
+  font-size:xx-small;
+}
 .chat__messages {
   flex-grow: 1;
   overflow-y: scroll;
